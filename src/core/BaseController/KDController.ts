@@ -1,0 +1,169 @@
+
+/**
+ * KDController is the base controller class to that is to be extended by other controller files
+ * Request Handler Functions for the Express Routes
+ */
+
+
+/**
+ * Passes the Model Created 
+ * Access Base Service Class 
+ * 
+ */
+
+
+import { Request, Response, NextFunction } from "express"
+import { Model, Document } from "mongoose"
+import KDService from "../BaseService/KDService"
+import KDIResponseData from "../BaseInterface/KDIResponseData"
+import ResponseHelper from "../Helpers/ResponseHelper"
+import { decode } from 'jsonwebtoken'
+
+export default class KDController {
+
+    // class members
+    private model: Model<any>
+    private baseService: KDService;
+
+
+    //constructor
+    constructor() {
+
+        ///console.log(this.baseService)
+        this.create = this.create.bind(this)
+        this.get = this.get.bind(this)
+        this.getOne = this.getOne.bind(this)
+        this.update = this.update.bind(this)
+        this.delete = this.delete.bind(this)
+
+
+    }
+
+    setService(service: KDService) {
+        this.baseService = service
+    }
+
+    getService() {
+        return this.baseService
+    }
+
+    setServiceByModel(model: Model<Document>) {
+        this.model = model;
+        this.baseService = new KDService();
+        this.baseService.setModel(model)
+    }
+
+    public getAuthToken(req: Request, scheme = " ") {
+        return (req.headers.authorization) ? req.headers.authorization.split(scheme)[1] : null || null
+    }
+
+    public getTokenPayload(req: Request) {
+
+        let token = this.getAuthToken(req);
+        if (token == null) {
+            return null
+        }
+
+        let decodedToken = decode(token);
+        // console.log("Decoded token" + decodedToken)
+        return decodedToken;
+
+    }
+
+    public getAuthOwnerId(req: Request) {
+        let authDecodedToken = this.getTokenPayload(req);
+        console.log("Seem So yeah " + authDecodedToken)
+        if (authDecodedToken !== null) {
+            return authDecodedToken['payload']['id'];
+        }
+
+        return null;
+    }
+
+    //Create Request Handler
+    async create(req: Request, res: Response, next: NextFunction) {
+        //console.log(req.body)
+        try {
+
+            //Validation Comes here
+
+            let responseData = await this.baseService.create(req.body)
+
+            return ResponseHelper.requestHandler(responseData, res);
+
+
+        } catch (err) {
+            return ResponseHelper.internalErrorResponse(res)
+        }
+
+    }
+
+    //Read Request Handler
+
+    //Get All the Results
+    async get(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            let responseData = await this.baseService.getAll();
+
+            return ResponseHelper.requestHandler(responseData, res)
+
+
+        } catch (ex) {
+            console.log(ex.message)
+            ResponseHelper.internalErrorResponse(res)
+        }
+
+    }
+
+    async getOne(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            let responseData = await this.baseService.getOne(req.params.id);
+
+            return ResponseHelper.requestHandler(responseData, res)
+
+        } catch (ex) {
+            ResponseHelper.internalErrorResponse(res)
+        }
+
+
+    }
+
+    // Update Request Handle
+
+    async update(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            let responseData = await this.baseService.update(req.params.id, req.body);
+
+            return ResponseHelper.requestHandler(responseData, res)
+
+        } catch (ex) {
+            ResponseHelper.internalErrorResponse(res)
+        }
+
+    }
+
+    //Delete Request Handle
+
+    async delete(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            let responseData = await this.baseService.delete(req.params.id);
+
+            return ResponseHelper.requestHandler(responseData, res)
+
+        } catch (ex) {
+            ResponseHelper.internalErrorResponse(res)
+        }
+
+    }
+
+
+
+}

@@ -2,9 +2,10 @@ import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import ytdl from 'ytdl-core';
-import filenamify from  'filenamify';
+import filenamify from 'filenamify';
 import slugify from 'slugify';
 import searchYoutube from 'youtube-api-v3-search';
+import { YoutubeAPIResponse } from './app/Models/Interfaces/YouTubeAPISearchResult';
 
 
 export default class ExpressApplication {
@@ -15,9 +16,9 @@ export default class ExpressApplication {
     this.routes();
   }
 
-  cleanFileName(name:string){
+  cleanFileName(name: string) {
 
-    name  =  filenamify(name)
+    name = filenamify(name)
     return slugify(name);
   }
 
@@ -47,45 +48,45 @@ export default class ExpressApplication {
         //   //filter: 'audioonly',
         // });
 
-          
-        
-        let info  =  await ytdl.getInfo(url);
 
-        let name  = info.title
+
+        let info = await ytdl.getInfo(url);
+
+        let name = info.title
 
         res.attachment(`${this.cleanFileName(name)}`);
 
         console.log(this.cleanFileName(name));
-        
 
-        
+
+
         //res.json(info)
 
 
 
         let audioFormats = ytdl.chooseFormat(info.formats, {
-            quality: 'highestaudio',
-            filter: 'audioonly'
-          })
+          quality: 'highestaudio',
+          filter: 'audioonly'
+        })
 
-        let formats =  JSON.parse(JSON.stringify(audioFormats));
+        let formats = JSON.parse(JSON.stringify(audioFormats));
         console.log(formats.clen);
 
-        res.set('Content-Length' , formats.clen);
-        let container =  formats.container || 'm4a'
+        res.set('Content-Length', formats.clen);
+        let container = formats.container || 'm4a'
         res.set('Content-Type', `audio/${container}`);
 
 
-        const video =  ytdl.downloadFromInfo(info, {
-            quality: 'highestaudio',
-            filter: 'audioonly'
-          })
+        const video = ytdl.downloadFromInfo(info, {
+          quality: 'highestaudio',
+          filter: 'audioonly'
+        })
 
 
 
-        
-    
-    
+
+
+
 
         // console.log(audioFormats);/
 
@@ -101,20 +102,45 @@ export default class ExpressApplication {
 
 
 
-    this.app.get('/search' ,async (req,res)=>{
+    this.app.get('/search', async (req, res) => {
 
 
       const options = {
-        q:'when you are ready shawn mendes'
+        q: 'when you are ready shawn mendes',
+        maxResults: '25',
+        type: 'video'
+
       }
-     let searchResults =  await searchYoutube("AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4",options)
-
-     console.log(searchResults);
-     
-     res.json(searchResults)
+      let searchResults: YoutubeAPIResponse = await searchYoutube("AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4", options)
 
 
-      
+      let searchResponse: any[] = []
+      let items = searchResults.items
+
+      let youtubeResults = items.map(results => {
+
+        let snippetData = results.snippet
+        let idDetails = results.id
+
+        let data = {
+          title: snippetData.title,
+          videoId: idDetails.videoId,
+          thumbnail: snippetData.thumbnails.high.url
+        }
+
+
+        searchResponse = [...searchResponse, data]
+
+
+
+      })
+
+      console.log(searchResults);
+
+      res.json(searchResponse)
+
+
+
     })
   }
 
