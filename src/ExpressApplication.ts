@@ -4,6 +4,8 @@ import cors from 'cors';
 import ytdl from 'ytdl-core';
 import filenamify from  'filenamify';
 import slugify from 'slugify';
+import searchYoutube from 'youtube-api-v3-search';
+
 
 export default class ExpressApplication {
   private app: express.Application;
@@ -39,7 +41,7 @@ export default class ExpressApplication {
 
 
         // res.attachment('audiotest.mp3');
-        const url = 'https://www.youtubdde.com/watch?v=twl56JMNNjA';
+        const url = 'https://www.youtube.com/watch?v=twl56JMNNjA';
         // const video = ytdl(url, {
         //   quality: 'highestaudio'
         //   //filter: 'audioonly',
@@ -57,27 +59,27 @@ export default class ExpressApplication {
         
 
         
-        res.json(info)
+        //res.json(info)
 
 
 
-        // let audioFormats = ytdl.chooseFormat(info.formats, {
-        //     quality: 'highestaudio',
-        //     filter: 'audioonly'
-        //   })
+        let audioFormats = ytdl.chooseFormat(info.formats, {
+            quality: 'highestaudio',
+            filter: 'audioonly'
+          })
 
-        // let formats =  JSON.parse(JSON.stringify(audioFormats));
-        // console.log(formats.clen);
+        let formats =  JSON.parse(JSON.stringify(audioFormats));
+        console.log(formats.clen);
 
-        // res.set('Content-Length' , formats.clen);
-        // let container =  formats.container || 'm4a'
-        // res.set('Content-Type', `audio/${container}`);
+        res.set('Content-Length' , formats.clen);
+        let container =  formats.container || 'm4a'
+        res.set('Content-Type', `audio/${container}`);
 
 
-        // const video =  ytdl.downloadFromInfo(info, {
-        //     quality: 'highestaudio',
-        //     filter: 'audioonly'
-        //   })
+        const video =  ytdl.downloadFromInfo(info, {
+            quality: 'highestaudio',
+            filter: 'audioonly'
+          })
 
 
 
@@ -85,17 +87,35 @@ export default class ExpressApplication {
     
     
 
-        // // console.log(audioFormats);/
+        // console.log(audioFormats);/
 
-        // // res.json(audioFormats);
+        // res.json(audioFormats);
 
-        // video.on('finish', () => {
-        //   console.log('This is done');
-        //   res.end();
-        // });
-        // video.pipe(res);
+        video.on('finish', () => {
+          console.log('This is done');
+          res.end();
+        });
+        video.pipe(res);
       }
     );
+
+
+
+    this.app.get('/search' ,async (req,res)=>{
+
+
+      const options = {
+        q:'when you are ready shawn mendes'
+      }
+     let searchResults =  await searchYoutube("AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4",options)
+
+     console.log(searchResults);
+     
+     res.json(searchResults)
+
+
+      
+    })
   }
 
   createServer() {
