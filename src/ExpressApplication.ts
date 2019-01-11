@@ -5,7 +5,8 @@ import ytdl from 'ytdl-core';
 import filenamify from 'filenamify';
 import slugify from 'slugify';
 import searchYoutube from 'youtube-api-v3-search';
-import { YoutubeAPIResponse } from './app/Models/Interfaces/YouTubeAPISearchResult';
+import { IYoutubeAPIResponse } from './app/Models/Interfaces/YouTubeAPISearchResult';
+import YTSearchController from './app/Controllers/YouTubeSearchController/YouTubeSearchController';
 
 
 export default class ExpressApplication {
@@ -102,7 +103,10 @@ export default class ExpressApplication {
 
 
 
-    this.app.get('/search', async (req, res) => {
+    this.app.get('/search', YTSearchController.search);
+
+
+    this.app.get('/oldsearch', async (req, res) => {
 
 
       const options = {
@@ -111,7 +115,7 @@ export default class ExpressApplication {
         type: 'video'
 
       }
-      let searchResults: YoutubeAPIResponse = await searchYoutube("AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4", options)
+      let searchResults: IYoutubeAPIResponse = await searchYoutube("AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4", options)
 
 
       let searchResponse: any[] = []
@@ -123,9 +127,9 @@ export default class ExpressApplication {
         let idDetails = results.id
 
         let data = {
-          title: snippetData.title,
-          videoId: idDetails.videoId,
-          thumbnail: snippetData.thumbnails.high.url
+          title: snippetData.title || "",
+          videoId: idDetails.videoId || "",
+          thumbnail: snippetData.thumbnails.high.url || ""
         }
 
 

@@ -1,4 +1,4 @@
-export interface YoutubeAPIResponse {
+export interface IYoutubeAPIResponse {
     kind: string;
     etag: string;
     nextPageToken: string;

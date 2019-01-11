@@ -1,0 +1,6 @@
+const SECRET_KEYS = {
+
+    YOUTUBE_DATA_API: 'AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4'
+}
+
+export default SECRET_KEYS;
