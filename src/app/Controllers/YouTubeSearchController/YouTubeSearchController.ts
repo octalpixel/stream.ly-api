@@ -54,7 +54,7 @@ export class YouTubeSearchController {
                     title: snippetData.title || "",
                     videoId: idDetails.videoId || "",
                     thumbnail: snippetData.thumbnails.high.url || "",
-                    profile: snippetData.channelTitle
+                    profile: snippetData.channelTitle || ""
                 }
 
                 return response

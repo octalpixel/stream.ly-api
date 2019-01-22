@@ -10,10 +10,6 @@ export interface IUser extends mongoose.Document {
     email: string;
     password?: string;
     avatar?: string;
-    role?: string,
-    hasProfile?: boolean;
-    profile_id?: string;
-    completedOnBoarding: boolean;
     comparePassword(candidatePassword: string, storedPassword: string): Promise<boolean>
 }
 
@@ -44,10 +40,6 @@ export const userSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
-    cv_collection: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CVCollection"
-    }
 
 });
 

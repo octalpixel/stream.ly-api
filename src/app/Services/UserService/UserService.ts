@@ -1,5 +1,5 @@
 import { KDService } from "../../../app.core.config"
-import { userModel as User, IUser, userModel } from "../../Models/User"
+import { userModel as User, IUser, userModel } from "../../Models/Users";
 import { Document } from "mongoose"
 import * as moment from 'moment'
 import * as jwt from 'jsonwebtoken';

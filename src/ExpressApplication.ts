@@ -106,46 +106,21 @@ export default class ExpressApplication {
     this.app.get('/search', YTSearchController.search);
 
 
-    this.app.get('/oldsearch', async (req, res) => {
+
+    // test for communication enginer
+    this.app.post('/transportengine', (req, res) => {
 
 
-      const options = {
-        q: 'when you are ready shawn mendes',
-        maxResults: '25',
-        type: 'video'
+      console.log(req.body);
 
-      }
-      let searchResults: IYoutubeAPIResponse = await searchYoutube("AIzaSyDQG-5CqZa2DHmba7QTIfH2zzFUlVgKWX4", options)
-
-
-      let searchResponse: any[] = []
-      let items = searchResults.items
-
-      let youtubeResults = items.map(results => {
-
-        let snippetData = results.snippet
-        let idDetails = results.id
-
-        let data = {
-          title: snippetData.title || "",
-          videoId: idDetails.videoId || "",
-          thumbnail: snippetData.thumbnails.high.url || ""
-        }
-
-
-        searchResponse = [...searchResponse, data]
-
-
-
+      res.json({
+        data: 'Completed :D'
       })
-
-      console.log(searchResults);
-
-      res.json(searchResponse)
 
 
 
     })
+
   }
 
   createServer() {
