@@ -1,12 +1,13 @@
 import KDController from "../../../core/BaseController/KDController";
 import { Request, Response, NextFunction } from 'express'
+import { parsePlaylist } from "../../../core/Helpers/YoutubeHelper/YoutubeHelper";
 
-class PlaylistController extends KDController {
+class PlaylistController {
 
 
 
     constructor() {
-        super()
+
     }
 
 
@@ -20,15 +21,20 @@ class PlaylistController extends KDController {
         // return confirmation
 
 
-        let url: string = req.body.url
+        // let url: string = req.body.url
 
-        if (url == undefined || url.length >= 0) {
+        // if (url == undefined || url.length >= 0) {
 
-        }
+        // }
 
+        let data = await parsePlaylist('PL6j62WXKkENq1pM1vqv1P9abb99ttMiIZ')
+
+        return res.json({ data: data, dataCount: data.length })
 
     }
 
 
 
 }
+
+export default new PlaylistController();

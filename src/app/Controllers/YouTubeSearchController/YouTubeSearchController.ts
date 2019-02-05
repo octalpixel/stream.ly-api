@@ -2,11 +2,11 @@ import KDController from "../../../core/BaseController/KDController";
 import searchYoutube from 'youtube-api-v3-search';
 import { IYoutubeAPIResponse } from "../../Models/Interfaces/YouTubeAPISearchResult";
 
-import SECRET_KEYS from '../../app.secret.config';
+import SECRET_KEYS from '../../Configs/app.secret.config';
 
 import { Request, Response, NextFunction } from 'express'
 import ResponseHelper from "../../../core/Helpers/ResponseHelper";
-import APP_MESSAGES from "../../app.message.config";
+import APP_MESSAGES from "../../Configs/app.message.config";
 
 
 interface YTSearchParams {
@@ -113,6 +113,9 @@ export class YouTubeSearchController {
 
 
     }
+
+
+
 
 
 }

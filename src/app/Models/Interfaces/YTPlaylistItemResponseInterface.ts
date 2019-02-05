@@ -49,3 +49,20 @@ interface PageInfo {
     totalResults: number;
     resultsPerPage: number;
 }
+
+
+interface IYTPlaylistError {
+    error: YTPLErrors;
+}
+
+interface YTPLErrors {
+    errors: YTPLError[];
+    code: number;
+    message: string;
+}
+
+interface YTPLError {
+    domain: string;
+    reason: string;
+    message: string;
+}

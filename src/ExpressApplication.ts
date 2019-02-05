@@ -7,6 +7,7 @@ import slugify from 'slugify';
 import searchYoutube from 'youtube-api-v3-search';
 import { IYoutubeAPIResponse } from './app/Models/Interfaces/YouTubeAPISearchResult';
 import YTSearchController from './app/Controllers/YouTubeSearchController/YouTubeSearchController';
+import PlaylistController from './app/Controllers/PlaylistController/PlaylistController';
 
 
 export default class ExpressApplication {
@@ -104,6 +105,8 @@ export default class ExpressApplication {
 
 
     this.app.get('/search', YTSearchController.search);
+
+    this.app.get('/playlist', PlaylistController.importYTPlaylist)
 
 
 

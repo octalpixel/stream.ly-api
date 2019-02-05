@@ -16,6 +16,11 @@ export default class PlaylistService extends KDService {
     }
 
 
+    getPlaylistID() {
+
+    }
+
+
     async isPlaylistAlredyParsed(playlistId) {
 
         try {
